@@ -1,10 +1,13 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { userService } from '../services/userService'
+import NotificationModal from './NotificationModal.vue'
 
 export default {
     setup() {
         const users = ref([])
+        const isModalOpen = ref(false)
+
 
         const fetchUsers = async () => {
             try {
@@ -20,7 +23,8 @@ export default {
         })
 
         return {
-            users
+            users,
+            isModalOpen
         }
     },
 
@@ -53,13 +57,26 @@ export default {
                 hour12: false,
             }).replace(',', '');
         }
+    },
+    components: {
+        NotificationModal,
     }
 }
 </script>
 
 <template>
+
+    <b><h1>Thông tin nhân viên</h1></b>
     <div>
-        <table>
+        <button type="button" class="add-user-button" @click="isModalOpen = true">Hiện notification đơn giản</button>
+    </div>
+
+    <NotificationModal v-if="isModalOpen"
+    @close="isModalOpen = false"/>
+
+
+    <div class="table-container">
+        <table class="user-table">
         <thead>
             <tr>
                 <th>No.</th>
@@ -95,6 +112,19 @@ export default {
 </template>
 
 <style>
+    .user-table {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .user-table h1 {
+        text-align: center;
+        margin-bottom: 0;
+    }
+
     table {
       border-collapse: collapse;
       width: 100%;
@@ -108,5 +138,15 @@ export default {
       padding: 8px;
       border: 1px solid #ccc;
       text-align: left;
+    }
+    .table-container {
+        margin-top: 20px;
+        overflow-x: auto;
+        max-height: 500px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #f3f4f6;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     }
   </style>
